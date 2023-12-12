@@ -220,7 +220,7 @@
         function drawChart() {
             try {
 
-                var soc = {{ rd.sDbusSoc }};
+                var soc = {{ rd.nDbusSoc }};
                 if (soc < 0 || 100 < soc) {
 
                     sOut = ""
@@ -238,14 +238,14 @@
                     document.getElementById('scripterr').height = 1;
                 }
 
-                var pvv = {{ rd.sDbusMaxPvVolt }};
-                var bav = {{ rd.sDbusBattVolt }};
+                var pvv = {{ rd.nDbusAktPvVolt }};
+                var bav = {{ rd.nDbusBattVolt }};
 
                 var dataSoc = google.visualization.arrayToDataTable([
                     ['Label', 'Value'],
-                    ['Batt (%)', soc] //hier kann {{ rd.sDbusSoc }} nicht verwendet werden
+                    ['Batt (%)', soc] //hier kann {{ rd.nDbusSoc }} nicht verwendet werden
                 ]);
-                //data.setValue(0, 1, soc);//hier kann {{ rd.sDbusSoc }} nicht verwendet werden
+                //data.setValue(0, 1, soc);//hier kann {{ rd.nDbusSoc }} nicht verwendet werden
 
                 var dataPvV = google.visualization.arrayToDataTable([
                     ['Label', 'Value'],
@@ -567,13 +567,12 @@
                 <div id="dbus">Ertrag heute: {{ rd.sDbusErtragHeute }} kWh</div>
 
                 <!-- wird oben schon als Gauge/Tacho angezeigt:
-    <div id="dbus">SOC:  rd.sDbusSoc  %</div>
-    <div id="dbus">Max. PV-Spannung:  rd.sDbusMaxPvVolt  </div>
-    <div id="dbus">Batterie-Spannung:  rd.sDbusBattVolt  V</div>
-    -->
-                <div id="dbus">Akt. PV-Spannung: {{ rd.sDbusAktPvVolt }} V</div>
-
-
+                    <div id="dbus">SOC:  rd.nDbusSoc  %</div>
+                    <div id="dbus">Batterie-Spannung:  rd.nDbusBattVolt  V</div>
+                    <div id="dbus">Akt. PV-Spannung:  rd.nDbusAktPvVolt V
+                -->
+                <div id="dbus">Max. PV-Spannung: {{rd.sDbusMaxPvVolt45 }} </div>
+                
                 <div id="dbus">Min. Zellenspannung: {{ rd.sDbusMinCellVolt }} V</div>
                 <div id="dbus">Max. Zellenspannung: {{ rd.sDbusMaxCellVolt }} V</div>
                 <div id="dbus">Min. Zellentemperatur: {{ rd.sDbusMinCellTemp }} °C</div>

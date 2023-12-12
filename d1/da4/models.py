@@ -230,8 +230,7 @@ class RaspiData:
 
    def OneParaSsh(self, ssh, cmd):
       try:
-#$$      
-         return "0"
+#$$      return "0"
 
          stdin,stdout,stderr=ssh.exec_command(cmd)
          outlines=stdout.readlines()
@@ -264,7 +263,7 @@ class RaspiData:
          # fkt, aber keine gute Stelle:     mykey = paramiko.RSAKey.from_private_key_file('/mnt/wd2tb/script/django/d1/da4/temp/k4')
          # fkt, habe aber trotzdem Bauchschmerzen:
          mykey = paramiko.RSAKey.from_private_key_file('/mnt/wd2tb/script/all/k4')
-         print(mykey)
+         #print(mykey)
          try:
             ssh.connect(ip,port,username,pkey=mykey)
          except Exception as e:
@@ -272,7 +271,7 @@ class RaspiData:
             return
 
          
-         self.sDbusSoc = self.OneParaSsh(ssh, 'dbus -y com.victronenergy.system /Dc/Battery/Soc GetValue')
+         self.nDbusSoc = self.OneParaSsh(ssh, 'dbus -y com.victronenergy.system /Dc/Battery/Soc GetValue')
 
          sDbusSolarServiceName =  "com.victronenergy.solarcharger.ttyS7"
          self.sDbusErtrag = str(round(float(self.OneParaSsh(ssh, f'dbus -y {sDbusSolarServiceName} /Yield/System GetValue'))))
@@ -281,9 +280,10 @@ class RaspiData:
          dMaxPv = float(self.OneParaSsh(ssh, f'dbus -y {sDbusSolarServiceName} /History/Overall/MaxPvVoltage GetValue'))
          sMaxPv = str(round(dMaxPv))
          sMaxPv5 = str(round(dMaxPv / 4 * 5))
-         self.sDbusMaxPvVolt = f'{sMaxPv} V (/4*5: {sMaxPv5} V)'
+         self.nDbusMaxPvVolt = round(dMaxPv)
+         self.sDbusMaxPvVolt45 = f'{sMaxPv} V (/4*5: {sMaxPv5} V)'
 
-         self.sDbusAktPvVolt = str(round(float(self.OneParaSsh(ssh, f'dbus -y {sDbusSolarServiceName} /Pv/V GetValue'))))
+         self.nDbusAktPvVolt = round(float(self.OneParaSsh(ssh, f'dbus -y {sDbusSolarServiceName} /Pv/V GetValue')))
 
          sDbusBattServiceName =  "com.victronenergy.battery.socketcan_can1"
          self.sDbusMinCellVolt = str(round(float(self.OneParaSsh(ssh, f'dbus -y {sDbusBattServiceName} /System/MinCellVoltage GetValue')),3))
@@ -291,7 +291,7 @@ class RaspiData:
          self.sDbusMinCellTemp = str(round(float(self.OneParaSsh(ssh, f'dbus -y {sDbusBattServiceName} /System/MinCellTemperature GetValue')),1))
          self.sDbusMaxCellTemp = str(round(float(self.OneParaSsh(ssh, f'dbus -y {sDbusBattServiceName} /System/MaxCellTemperature GetValue')),1))
 
-         self.sDbusBattVolt = str(round(float(self.OneParaSsh(ssh, 'dbus -y com.victronenergy.battery.socketcan_can1 /Dc/0/Voltage GetValue')),1))
+         self.nDbusBattVolt = round(float(self.OneParaSsh(ssh, 'dbus -y com.victronenergy.battery.socketcan_can1 /Dc/0/Voltage GetValue')),1)
 
          sDbusEmServiceName = "com.victronenergy.acload.cgwacs_ttyUSB0_mb1"
          #$$ L1 und L2 fehlen noch
@@ -329,10 +329,13 @@ class RaspiData:
       self.sProgMorgen =  ""
       self.sProgUebermorgen =  ""
 
-#$$      self.ParaSsh()
-      self.sDbusSoc = "55"
-      self.sDbusMaxPvVolt = 166
-      self.sDbusBattVolt = 51
+      self.nDbusSoc = 0
+      self.nDbusMaxPvVolt = 0
+      self.nDbusBattVolt = 0
+      self.nDbusAktPvVolt = 0
+      self.sDbusMaxPvVolt45 = ""
+#$$      
+      self.ParaSsh()
 
       self.sCpuTemp = "CPU-Temperatur"
       self.sCpuTempWert = str(round(float(psutil.sensors_temperatures()['cpu_thermal'][0].current),1))
