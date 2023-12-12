@@ -1,0 +1,178 @@
+<html>
+<head>
+    <title>Das Template statisch1tpl.html</title>
+    <style>
+        #aa {
+            background-color: lightblue;
+            color: red;
+            padding: 20px;
+            text-align: center;
+        }
+        #bb {
+            background-color: lightblue;
+            color: red;
+            padding: 20px;
+            text-align: center;
+        }
+        #xx {
+            background-color: lightblue;
+            color: red;
+            padding: 40px;
+            text-align: center;
+        }
+        #yy {
+            background-color: lightblue;
+            color: red;
+            padding: 40px;
+            text-align: center;
+        }
+        #zz {
+            background-color: lightblue;
+            color: red;
+            padding: 40px;
+            text-align: center;
+        }
+        #img26 {
+            height: 50px;
+        }
+        #img27 {
+            height: 50px;
+        }
+        #img28 {
+            height: 50px;
+        }
+        #img29 {
+            height: 80px;
+        }
+
+
+
+    </style>
+</head>
+<body>
+
+    <h1>Ein Template mit purem HTML</h1>
+    <ul>
+        <li>Der Ball ist rund und ein Spiel dauert 90 Minuten! </li>
+        <li>Der Ball ist rund. Wäre er eckig, wäre er ja ein Würfel. </li>
+        <li>Wäre, wäre, Fahrradkette </li>
+        <li>Da mach‘ ich mir vom Kopf her keine Gedanken. </li>
+        <li>Viele sehen es negativ, dass wir schlecht gespielt haben. </li>
+    </ul>
+
+    <h1>nochmal mit eingebettetem js</h1>
+    <ul style="color:blue">
+        <script type="text/javascript">
+            zitate = ["Der Ball ist rund und ein Spiel dauert 90 Minuten! ",
+                "Der Ball ist rund. Wäre er eckig, wäre er ja ein Würfel. ",
+                "Wäre, wäre, Fahrradkette ",
+                "Jede Seite hat zwei Medaillen! ",
+                "Man muss nicht immer die absolute Mehrheit hinter sich haben, manchmal reichen auch 51 Prozent. ",
+                "Wir waren früher härter; bei uns gab's keine Verletzungen, sondern nur glatte Brüche. ",
+                "Die wissen nicht einmal, dass im Ball Luft ist. Die glauben doch, der springt, weil ein Frosch drin ist. ",
+                "Wir müssen vor dem Tor einfach cooler sein, einfach heißer. ",
+                "Da mach‘ ich mir vom Kopf her keine Gedanken. ",
+                "Viele sehen es negativ, dass wir schlecht gespielt haben. "];
+            for (var i = 0; i < zitate.length; i++) {
+                document.write("<li>" + zitate[i] + "</li>");
+            }
+        </script>
+    </ul>
+
+    <h1>Bild</h1>
+
+
+    <!-- Ist nicht nötig: -->
+    <!--{% load static %}-->
+    <!-- funktioniert nicht:
+        <img id="img26" src="rh4.jpg" alt="My imagesdsdsdfsd">
+        <img id="img26" src="da1/rh4.jpg" alt="My imagesdsdsdfsd">
+    -->
+    <!-- funktioniert, wenn in:  /etc/apache2/sites-enabled/000-default.conf
+        ein alias konfiguriert wird:
+         Alias /static/ /mnt/wd2tb/script/django/d1/static/
+        -->
+
+    <img id="img27" src="{% static 'da1/gauge.jpg' %}" alt="My image">
+
+    <h1>Script-Test</h1>
+    <!--
+        <script type="text/javascript">
+            alert("ppp1")
+            alert(ppp.length)
+        </script>
+    -->
+    <h1>und nochmal mit script1.js </h1>
+    <!-- fkt nur in reinem Django, nicht aber mit apache
+        {% load static %}
+        <img id="img1" src="{% static 'da1/rh.jpg' %}" alt="My image">
+    <ul style="color:white">
+        {% load static %}
+        <script type="text/javascript" src="{% static 'da1/script1.js' %}"></script>
+    </ul>
+    -->
+
+    <div id="xx">sddfdsdfsdsdsd</div>
+    <ul style="color:white">
+        <!--{% load static %}-->
+        <script type="text/javascript" src="{% static 'da1/script1.js' %}"></script>
+    </ul>
+    <div id="yy">sddddddddddddererttertdsd</div>
+    <ul style="color:white">
+        <!--{% load static %}
+        <script type="text/javascript" src="{% static 'da1/script2.js' %}"></script>
+        -->
+        <script type="text/javascript" src="/script2.js"></script>
+    </ul>
+
+    <div id="zz">szzzzzzzzzzzzddddererttertdsd</div>
+    <ul style="color:white">
+        <!--{% load static %}
+        <script type="text/javascript" src="{% static 'da1/script2.js' %}"></script>
+        -->
+        <script type="text/javascript" src="{% static 'da1/script3.js' %}"></script>
+    </ul>
+    <div id="aa">szaaaaaaaaaazddddererttertdsd</div>
+    <ul style="color:white">
+        <!--{% load static %}
+        <script type="text/javascript" src="{% static 'da1/script2.js' %}"></script>
+        -->
+        <script type="text/javascript" src="/script4.js"></script>
+    </ul>
+    <div id="bb">szbbbbbbbbbbbrttertdsd</div>
+    <ul style="color:white">
+        <!--{% load static %}
+        -->
+        <script type="text/javascript" src="{% static 'da1/script5.js' %}"></script>
+    </ul>
+
+
+    <!--
+    <ul style="color:white">
+        <script type="text/javascript" src="/script1.js"></script>
+    </ul>
+        -->
+
+
+    <h1>Sprüche jetzt aus dem Model</h1>
+    <ul>
+        {% for x in sprueche %}
+        <li>{{ x }}</li>
+        {% endfor %}
+    </ul>
+
+
+
+    <h1>Sätze aus solar2023</h1>
+    <table>
+        <tr><th>Stunden</th></tr>
+        {% for z in vbstunde %}
+        <tr>
+            <td>{{ z.tstunde}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</body>
+</html>
+

@@ -1,0 +1,664 @@
+<html>
+<head>
+    <title>PVI H28</title>
+    <style>
+        #title {
+            background-color: #5690bb;
+            color: white;
+            padding: 5px;
+            text-align: left;
+            font-size: 20pt;
+            font-family: Calibri;
+        }
+
+        #maria {
+            margin-top: 10px;
+            color: black;
+            padding: 1px;
+            text-align: left;
+            font-size: 12pt;
+            font-family: Calibri;
+            margin-left: 5px;
+        }
+
+        #mb {
+            margin-top: 10px;
+            background-color: darkblue;
+            color: white;
+            padding: 1px;
+            text-align: left;
+            font-size: 12pt;
+            font-family: Calibri;
+            margin-left: 5px;
+        }
+
+        #dbus {
+            background-color: #fcf3f3;
+            color: #5690bb;
+            padding: 1px;
+            text-align: left;
+            font-size: 12pt;
+            font-family: Calibri;
+            margin-left: 5px;
+        }
+
+        #cpu {
+            background-color: darkgray;
+            color: white;
+            padding: 1px;
+            text-align: left;
+            font-size: 12pt;
+            font-family: Calibri;
+            margin-left: 5px;
+        }
+
+        #ram {
+            background-color: rgb(164, 215, 238);
+            color: darkblue;
+            padding: 1px;
+            text-align: left;
+            font-size: 12pt;
+            font-family: Calibri;
+            margin-left: 5px;
+        }
+
+        #hdd {
+            background-color: darkblue;
+            color: white;
+            padding: 1px;
+            text-align: left;
+            font-size: 12pt;
+            font-family: Calibri;
+            margin-left: 5px;
+        }
+
+        #emmc {
+            background-color: blue;
+            color: white;
+            padding: 1px;
+            text-align: left;
+            font-size: 12pt;
+            font-family: Calibri;
+            margin-left: 5px;
+        }
+
+        #appache_env_title {
+            background-color: #f6f1f1;
+            color: darkblue;
+            padding: 1px;
+            margin-top: 20px;
+            text-align: left;
+            font-size: 12pt;
+            font-family: Calibri;
+            font-weight: bold;
+        }
+
+        #appache_env {
+            background-color: #f6f1f1;
+            color: darkblue;
+            padding: 1px;
+            text-align: left;
+            font-size: 12pt;
+            font-family: Calibri;
+        }
+
+        #scripterr {
+            background-color: red;
+            color: white;
+            padding: 1px;
+            text-align: left;
+            font-size: 20pt;
+            font-family: Calibri;
+        }
+
+        #err {
+            background-color: red;
+            color: white;
+            padding: 5px;
+            text-align: left;
+            font-size: 20pt;
+            font-family: Calibri;
+        }
+
+        #offen {
+            color: red;
+            padding: 5px;
+            text-align: left;
+            font-size: 20pt;
+            font-family: Calibri;
+            margin-left: 5px;
+        }
+
+        th {
+            color: #5690bb;
+            padding: 5px;
+            text-align: left;
+            font-size: 12pt;
+            font-family: Calibri;
+            width: 500px;
+        }
+
+        li {
+            padding: 5px;
+            font-size: 12pt;
+            font-family: Calibri;
+        }
+
+        #xx {
+            background-color: lightblue;
+            color: red;
+            padding: 40px;
+            text-align: center;
+        }
+
+
+        #img26 {
+            height: 50px;
+        }
+
+
+        /* Dropdown Button */
+        .dropbtn {
+            margin-left: 5px;
+            margin-top: 10px;
+            background-color: #3498DB;
+            color: white;
+            padding: 5px;
+            font-size: 12pt;
+            font-family: Calibri;
+            border: none;
+            cursor: pointer;
+        }
+
+            /* Dropdown button on hover & focus */
+            .dropbtn:hover, .dropbtn:focus {
+                background-color: #2980B9;
+            }
+
+        /* The container <div> - needed to position the dropdown content */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Dropdown Content (Hidden by Default) */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+            /* Links inside the dropdown */
+            .dropdown-content a {
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+            }
+
+                /* Change color of dropdown links on hover */
+                .dropdown-content a:hover {
+                    background-color: #ddd;
+                }
+
+        /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+        .show {
+            display: block;
+        }
+
+    </style>
+
+    <!-- https://developers.google.com/chart/interactive/docs/gallery/gauge?hl=de -->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', {'packages':['gauge']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            try {
+
+                var soc = {{ rd.sDbusSoc }};
+                if (soc < 0 || 100 < soc) {
+
+                    sOut = ""
+                    try {
+                        var sErr = "SOC-Wert (";
+                        sOut = sErr.concat(soc, ") liegt nicht zwischen 0 und 100.");
+                    }
+                    catch (err) {
+                        //alert(err);
+                        document.getElementById('scripterr').innerHTML = err;
+                    }
+                    document.getElementById('scripterr').innerHTML = sOut;
+                }
+                else {
+                    document.getElementById('scripterr').height = 1;
+                }
+
+                var pvv = {{ rd.sDbusMaxPvVolt }};
+                var bav = {{ rd.sDbusBattVolt }};
+
+                var dataSoc = google.visualization.arrayToDataTable([
+                    ['Label', 'Value'],
+                    ['Batt (%)', soc] //hier kann {{ rd.sDbusSoc }} nicht verwendet werden
+                ]);
+                //data.setValue(0, 1, soc);//hier kann {{ rd.sDbusSoc }} nicht verwendet werden
+
+                var dataPvV = google.visualization.arrayToDataTable([
+                    ['Label', 'Value'],
+                    ['PV (V)', pvv]
+                ]);
+
+                var dataBaV = google.visualization.arrayToDataTable([
+                    ['Label', 'Value'],
+                    ['Batt (V)', bav]
+                ]);
+
+
+                var optionsSoc = {
+                    width: 400, height: 160,
+                    redFrom: 0, redTo: 15,
+                    yellowFrom: 15, yellowTo: 40,
+                    greenFrom: 40, greenTo: 100,
+                    minorTicks: 5
+                };
+                var optionsPvV = {
+                    width: 400, height: 160,
+                    greenFrom: 0, greenTo: 230,
+                    yellowFrom: 230, yellowTo: 240,
+                    redFrom: 240, redTo: 250,
+                    minorTicks: 5,
+                    min: 0,
+                    max: 250
+                };
+                var optionsBaV = {
+                    width: 400, height: 160,
+                    yellowFrom: 45, yellowTo: 48,
+                    greenFrom: 48, greenTo: 52,
+                    redFrom: 52, redTo: 55,
+                    minorTicks: 5,
+                    min: 45,
+                    max: 55
+                };
+
+                var chartSoc = new google.visualization.Gauge(document.getElementById('gaugeSoc'));
+                chartSoc.draw(dataSoc, optionsSoc);
+
+                var chartPvV = new google.visualization.Gauge(document.getElementById('gaugePvV'));
+                chartPvV.draw(dataPvV, optionsPvV);
+
+                var chartBaV = new google.visualization.Gauge(document.getElementById('gaugeBaV'));
+                chartBaV.draw(dataBaV, optionsBaV);
+
+                //catch-Test: alert(xxx)
+
+            }
+            catch (err) {
+                //alert(err);
+                document.getElementById('scripterr').innerHTML = err;
+            }
+      }
+
+        /* When the user clicks on the button,
+        toggle between hiding and showing the dropdown content */
+        function myFunction() {
+            document.getElementById("myDropdown").classList.toggle("show");
+        }
+
+        // Close the dropdown menu if the user clicks outside of it
+        window.onclick = function (event) {
+            if (!event.target.matches('.dropbtn')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                var i;
+                for (i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+
+    </script>
+
+    <!-- https://developers.google.com/chart/interactive/docs/gallery/vegachart_examples?hl=de -->
+    <script type="text/javascript">
+        //google.charts.load('upcoming', { 'packages': ['vegachart'] }).then(drawChart);
+        //google.charts.load('upcoming', { 'packages': ['vegachart'], 'language': 'de' }).then(drawChart);
+        //google.charts.load('upcoming', { 'packages': ['vegachart'], 'language': 'ja' }).then(drawChart);
+        //ok: google.charts.load('upcoming', { 'packages': ['vegachart'] }).then(drawChart);
+        ok: google.charts.load('current', { 'packages': ['vegachart'] }).then(drawChart);
+        //err: google.charts.load('current', { 'packages': ['vegachart'], 'language': 'de' }).then(drawChart);
+        //err: google.charts.load('upcoming', { 'packages': ['vegachart'], 'language': 'de' }).then(drawChart);
+        //err: google.charts.load('current', { 'packages': ['vegachart'], 'language': 'de-de' }).then(drawChart);
+        //err: google.charts.load('current', { 'packages': ['vegachart'], 'language': 'de_de' }).then(drawChart);
+        //err: google.charts.load('current', { 'packages': ['vegachart'], 'language': 'ja' }).then(drawChart);
+        //err: google.charts.load('current', { 'packages': ['vegachart'], 'language': 'fr' }).then(drawChart);
+        //err: google.charts.load('current', { 'packages': ['vegachart'], 'language': 'DE' }).then(drawChart);
+        //err: google.charts.load('upcoming', { 'packages': ['vegachart'], 'language': 'DE' }).then(drawChart);
+
+    function drawChart() {
+        const dataTable = new google.visualization.DataTable();
+
+        sCsvUrl = "https://raw.githubusercontent.com/grasmax/d4/main/Data/heinersdorf_yield_beide.csv"
+        sTestName = "Heinersdorf - Solarertrag 2023, Test 4 + 5";
+        var TestNr = {{ rd.param2 }};
+        if (TestNr == 4) {
+            sCsvUrl = "https://raw.githubusercontent.com/grasmax/d4/main/Data/heinersdorf_yield_6.csv";
+            sTestName = "Heinersdorf - Solarertrag 2023, Test 4";
+        }
+        else if (TestNr == 5) {
+            sCsvUrl = "https://raw.githubusercontent.com/grasmax/d4/main/Data/heinersdorf_yield_9.csv";
+            sTestName = "Heinersdorf - Solarertrag 2023, Test 5";
+        }
+
+            const options = {
+                'vega': {
+                    "$schema": "https://vega.github.io/schema/vega/v5.json",
+                    "width": 300,
+                    "height": 300,
+                    "padding": 5,
+
+                    "title": {
+                        //"text": "Heinersdorf - Solarertrag 2023",
+                        "text": sTestName,
+                        "anchor": "middle",
+                        "font-size": "12pt",
+                        "font-family": "Calibri",
+                        "color": "darkblue",
+                        "frame": "group",
+                        "offset": 4
+                    },
+
+                    "data": [{
+                        "name": "solaryield",
+                        //Vorlage: "url": "https://vega.github.io/vega/data/seattle-weather-hourly-normals.csv",
+                        //"url": "https://raw.githubusercontent.com/grasmax/d4/main/Data/heinersdorf_yield_beide.csv",
+                        //"url": "https://raw.githubusercontent.com/grasmax/d4/main/Data/heinersdorf_yield_6.csv",
+                        //"url": "https://raw.githubusercontent.com/grasmax/d4/main/Data/heinersdorf_yield_9.csv",
+                        //"url": "https://raw.githubusercontent.com/grasmax/d4/main/Data/heinersdorf_yield_beide.csv",
+                        "url": sCsvUrl,
+
+                        "format": {
+                            "type": "csv",
+                            "parse": {
+                                "solaryield": "number",
+                                "date": "date"
+                            }
+                        },
+                        "transform": [{
+                            "type": "formula",
+                            "as": "hour",
+                            "expr": "hours(datum.date)"
+                        },
+                        {
+                            "type": "formula",
+                            "as": "day",
+                            "expr": "datetime(year(datum.date), month(datum.date), date(datum.date))"
+                        }
+                        ]
+                    }],
+
+
+                    "scales": [{
+                        "name": "x",
+                        "type": "time",
+                        "domain": {
+                            "data": "solaryield",
+                            "field": "day"
+                        },
+                        "range": "width"
+                    },
+                    {
+                        "name": "y",
+                        "type": "band",
+                        "domain": [
+//                            5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22
+                            8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
+                        ],
+                        "range": "height"
+                    },
+                    {
+                        "name": "color",
+                        "type": "linear",
+                        "range": {
+                            "scheme": "redyellowblue"
+                        },
+                        "domain": {
+                            "data": "solaryield",
+                            "field": "solaryield"
+                        },
+                        "reverse": true,
+                        "zero": false,
+                        "nice": true
+                    }
+                    ],
+
+                    "axes": [{
+                        "orient": "bottom",
+                        "scale": "x",
+                        "domain": false,
+                        //"title": "Monat",
+                        "title": "Kalenderwoche",
+                        "titleFontSize": 12,
+                        //https://cloud.google.com/looker/docs/time-formatting-for-charts?hl=de
+                        //"format": "%m"
+                        "format": "%W"
+                    },
+                    {
+                        "orient": "left",
+                        "scale": "y",
+                        "domain": false,
+                        "title": "Stunde",
+                        "titleFontSize": 12,
+                        "encode": {
+                            "labels": {
+                                "update": {
+                                    "text": {
+//                                      "signal": "datum.value === 0 ? 'Midnight' : datum.value === 12 ? 'Mittag' : datum.value < 12 ? datum.value + ':00 am' : (datum.value - 12) + ':00 pm'"
+                                        "signal": "datum.value === 0 ? 'Midnight' : datum.value === 12 ? 'Mittag' : datum.value < 12 ? datum.value + ':00' : datum.value + ':00'"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    ],
+
+                    "legends": [{
+                        "fill": "color",
+                        "type": "gradient",
+                        "title": "Ertrag (kWh)",
+                        "titleFontSize": 12,
+                        "titlePadding": 4,
+                        "gradientLength": {
+                            "signal": "height - 16"
+                        }
+                    }],
+
+                    "marks": [{
+                        "type": "rect",
+                        "from": {
+                            "data": "solaryield"
+                        },
+                        "encode": {
+                            "enter": {
+                                "x": {
+                                    "scale": "x",
+                                    "field": "day"
+                                },
+                                "y": {
+                                    "scale": "y",
+                                    "field": "hour"
+                                },
+                                "width": {
+                                    "value": 5
+                                },
+                                "height": {
+                                    "scale": "y",
+                                    "band": 1
+                                },
+                                "tooltip": {
+                                    //"signal": "timeFormat(datum.date, '%b %d %I:00 %p') + ': ' + datum.solaryield + '°'"
+                                    //leider fkt lang=de nicht --> keine deutschen Wochentage
+                                    //"signal": "timeFormat(datum.date, '%A, %e.%m.%Y %H:00') + ': ' + datum.solaryield + 'kWh'"
+                                    "signal": "timeFormat(datum.date, '%e.%m.%Y %H:00') + ': ' + datum.solaryield + 'kWh'"
+                                }
+                            },
+                            "update": {
+                                "fill": {
+                                    "scale": "color",
+                                    "field": "solaryield"
+                                }
+                            }
+                        }
+                    }]
+                }
+            };
+
+            const chart = new google.visualization.VegaChart(document.getElementById('vegachart_yield'));
+            chart.draw(dataTable, options);
+        }
+    </script>
+
+
+
+
+</head>
+<body>
+    <div id="title">Hildestraße 28 ({{ rd.param1 }} / {{ rd.param2 }}  ) </div>
+
+    {% if errcount > 0 %}
+    {% for e in err  %}
+    <div id="err">Fehler: {{ e }} </div>
+    {% endfor %}
+    {% endif %}
+
+    <!-- für js-try/catch-Fehler -->
+    <div id="scripterr"></div>
+
+
+    <table>
+        <tr>
+            <th>Photovoltaik-Insel</th>
+            <th>Cloud- und Prognose-Rechner</th>
+            <th>Alarmanlage</th>
+        </tr>
+        <tr>
+        <tr valign="top">
+            <td>
+                <table>
+                    <tr>
+                        <td valign="top">
+                            <div id="gaugeSoc" style="width: 160px; height: 160px;"></div>
+                        </td>
+                        <td valign="top">
+                            <div id="gaugePvV" style="width: 160px; height: 160px;"></div>
+                        </td>
+                        <td valign="top">
+                            <div id="gaugeBaV" style="width: 160px; height: 160px;"></div>
+                        </td>
+                    </tr>
+                </table>
+
+                <div id="dbus">Ertrag: {{ rd.sDbusErtrag }} kWh</div>
+                <div id="dbus">Ertrag heute: {{ rd.sDbusErtragHeute }} kWh</div>
+
+                <!-- wird oben schon als Gauge/Tacho angezeigt:
+    <div id="dbus">SOC:  rd.sDbusSoc  %</div>
+    <div id="dbus">Max. PV-Spannung:  rd.sDbusMaxPvVolt  </div>
+    <div id="dbus">Batterie-Spannung:  rd.sDbusBattVolt  V</div>
+    -->
+                <div id="dbus">Akt. PV-Spannung: {{ rd.sDbusAktPvVolt }} V</div>
+
+
+                <div id="dbus">Min. Zellenspannung: {{ rd.sDbusMinCellVolt }} V</div>
+                <div id="dbus">Max. Zellenspannung: {{ rd.sDbusMaxCellVolt }} V</div>
+                <div id="dbus">Min. Zellentemperatur: {{ rd.sDbusMinCellTemp }} °C</div>
+                <div id="dbus">Max. Zellentemperatur: {{ rd.sDbusMaxCellTemp }} °C</div>
+
+                <div id="mb">MeteoBlue-Prognose von: {{ mb }} </div>
+
+                <div id="dbus">Prognose bis: {{ rd.sProgBis }}</div>
+                <div id="dbus">{{ rd.sProgHeute }}</div>
+                <div id="dbus">{{ rd.sProgMorgen }}</div>
+                <div id="dbus">{{ rd.sProgUebermorgen }}</div>
+                <div id="dbus">Prognose Monat: {{ rd.sProgMonat }}</div>
+                <div id="dbus">Prognose Jahr: {{ rd.sProgJahr }}</div>
+
+                <div class="dropdown">
+                    <button onclick="myFunction()" class="dropbtn">Datenauswahl für Vega-Diagramm</button>
+                    <div id="myDropdown" class="dropdown-content">
+                        <a href="http://192.168.2.28/da4/para/p1/4/">vom Langzeittest 4</a>
+                        <a href="http://192.168.2.28/da4/para/p1/5/">vom Langzeittest 5</a>
+                        <a href="http://192.168.2.28/da4/para/p1/0/">von Langzeittest 4 und 5</a>
+                    </div>
+                </div>
+
+
+                <div id="vegachart_yield" style="width: 300px; height: 400px;"></div>
+
+                <div id="offen">Offen:</div>
+                <ul>
+                    <li>VerbrauchGesamt, Vtoday L1 und L2</li>
+                </ul>
+                </div>
+
+            </td>
+            <td valign="top">
+                <div id="cpu">{{ rd.sLastBoot }}: {{ rd.sLastBootWert }}</div>
+                <div id="cpu">{{ rd.sCpuTemp }}: {{ rd.sCpuTempWert }}°C</div>
+                <div id="cpu">{{ rd.sCpuCount }}: {{ rd.sCpuCountWert }} / {{ rd.sCpuLoadWert }}</div>
+                <div id="cpu">{{ rd.sCpuLoad }}: {{ rd.sCpuLoadWert2 }}</div>
+
+                <div id="ram">RAM (%): {{ vm.percent }} </div>
+                <div id="ram">{{ rd.sRam }}: {{ rd.sRamWert }}</div>
+                <div id="ram">{{ rd.sRamSwap }}: {{ rd.sRamSwapWert }}</div>
+
+                {% for d in disk  %}
+                <div id="hdd">{{ d }} </div>
+                {% endfor %}
+
+                <div id="maria">{{ rd.sMariaDbStatus }}</div>
+
+                <div id="emmc">{{rd.sLastSysInfo}}: {{rd.sLastSysInfoWert}}(CET) /{{rd.sLastSysInfoWert2}}(UTC)</div>
+
+                <div>
+                    <div id='appache_env_title'>Apache-Umgebungsvariablen:</div>
+                    {% for e in env %}
+                    <div id='appache_env'>{{e}}</div>
+                    {% endfor %}
+                </div>
+
+            </td>
+
+            <td>
+            </td>
+
+        </tr>
+
+        <tr>
+            <td>
+            </td>
+            <td>
+            </td>
+
+
+            <td>
+            </td>
+
+        </tr>
+    </table>
+
+
+
+
+
+
+
+
+</body>
+</html>
+
