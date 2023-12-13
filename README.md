@@ -3,7 +3,8 @@
 
 Der Rahmen für diese Webseite wurde erstellt mit Hilfe dieses [Grundkurses](https://www.linkedin.com/learning/django-grundkurs) von [Ralph Steyer](http://www.rjs.de). 
 
-Die Anlage selbst ist [hier](https://github.com/grasmax/s1) beschrieben.
+Im [Handbuch](https://github.com/grasmax/d4/blob/main/Doc/Handbuch%20Cockpit-Webseite.pdf) ist die Entwicklung mit allen Hürden beschrieben.
+Die PV-Anlage selbst ist [hier](https://github.com/grasmax/s1) beschrieben.
 
 Das Cockpit wird bereitgestellt von einem Apache-Server auf einem [Raspberry Pi CM4](https://github.com/grasmax/AcOnOff/blob/main/doc/Inbetriebnahme%20eines%20Steuerrechners%20f%C3%BCr%20eine%20Photovoltaikinsel.pdf).
 
@@ -13,7 +14,7 @@ Die Daten aus der PV-Anlage werden mit [Paramiko](https://pypi.org/project/param
 
 Prognose-, Ertrags- und Verbrauchsdaten kommen aus einer MariaDB-Datenbank, die auch auf dem CM4 läuft.
 
-Mit Hilfe von [psutil](https://pypi.org/project/psutil/) werden die Systemwerte aus dem CM4 gelesen.
+Mit Hilfe von [psutil](https://pypi.org/project/psutil/)([Doku](https://psutil.readthedocs.io/en/latest/#system-related-functions)) werden die Systemwerte aus dem CM4 gelesen.
 
 Die Verknüpfung der Daten mit der Anzeige ist mit einem Django-Model-View-Template realisiert:
 * [models.py](https://github.com/grasmax/d4/blob/main/d1/da4/models.py) - Bereitstellung von Datenklassen.
