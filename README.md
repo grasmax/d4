@@ -16,7 +16,7 @@ Prognose-, Ertrags- und Verbrauchsdaten kommen aus einer MariaDB-Datenbank, die 
 
 Mit Hilfe von [psutil](https://pypi.org/project/psutil/)([Doku](https://psutil.readthedocs.io/en/latest/#system-related-functions)) werden die Systemwerte aus dem CM4 gelesen.
 
-Für die Anzeige werden [Google charts](https://developers.google.com/chart/interactive/docs?hl=de) ([gauge](https://developers.google.com/chart/interactive/docs/gallery/gauge?hl=de) und [vega](https://developers.google.com/chart/interactive/docs/gallery/vegachart?hl=de)) eingesetzt.
+Für die Anzeige werden [Google charts](https://developers.google.com/chart/interactive/docs?hl=de) ([vega](https://developers.google.com/chart/interactive/docs/gallery/vegachart?hl=de))) und [Gauge charts](https://github.com/grasmax/g1) eingesetzt.
 
 Die Verknüpfung der Daten mit der Anzeige ist mit einem Django-Model-View-Template realisiert:
 * [models.py](https://github.com/grasmax/d4/blob/main/d1/da4/models.py) - Bereitstellung von Datenklassen.
