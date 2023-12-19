@@ -1,6 +1,9 @@
 <html>
 <head>
     <title>PVI H28</title>
+    {% load static %}
+    <link rel="icon" href="{% static 'da4/favicon.png' %}" type="image/png">
+
     <style>
         #title {
             background-color: #5690bb;
@@ -157,7 +160,7 @@
         }
 
 
-        /* Dropdown Button */
+        /* Dropdown Button { */
         .dropbtn {
             margin-left: 5px;
             margin-top: 10px;
@@ -208,100 +211,28 @@
         .show {
             display: block;
         }
+        /* Dropdown Button } */
 
     </style>
 
-    <!-- https://developers.google.com/chart/interactive/docs/gallery/gauge?hl=de -->
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <!-- 3 Tachos: SOC, PV-Volt und Batterie-Volt mit eigenem Canvas
+         https://github.com/grasmax/g1/issues/1 beschreibt den Fehler, wenn man versucht die js-Datei aus github zu laden
+    ok:
+        V1: <script type="text/javascript" src="../../js/tacho.js"></script>
+        V2: <script src="../../js/tacho.js"></script>
+        V3: <script type="text/javascript" src="http://www.grasmax.de/tacho.js"></script>
+        V4: {% load static %}
+            <script type="text/javascript" src="{% static 'da4/tacho.js' %}"></script>
+    err:
+        <script type="text/javascript" src="https://github.com/grasmax/g1/blob/df0deef2e05342c406ba00cccdacb54b4bc87348/js/tacho.js"></script>
+        <script type="text/javascript" src="https://github.com/grasmax/g1/blob/main/js/tacho.js"></script>
+        <script type="text/javascript" src="https://raw.githubusercontent.com/grasmax/g1/main/js/tacho.js"></script>
+        -->
+    <script type="text/javascript" src="{% static 'da4/tacho.js' %}"></script>
+
+    <!-- 'DropDown'-Auswahlmenü -->
     <script type="text/javascript">
-        google.charts.load('current', {'packages':['gauge']});
-        google.charts.setOnLoadCallback(drawChart);
-
-        function drawChart() {
-            try {
-
-                var soc = {{ rd.nDbusSoc }};
-                if (soc < 0 || 100 < soc) {
-
-                    sOut = ""
-                    try {
-                        var sErr = "SOC-Wert (";
-                        sOut = sErr.concat(soc, ") liegt nicht zwischen 0 und 100.");
-                    }
-                    catch (err) {
-                        //alert(err);
-                        document.getElementById('scripterr').innerHTML = err;
-                    }
-                    document.getElementById('scripterr').innerHTML = sOut;
-                }
-                else {
-                    document.getElementById('scripterr').height = 1;
-                }
-
-                var pvv = {{ rd.nDbusAktPvVolt }};
-                var bav = {{ rd.nDbusBattVolt }};
-
-                var dataSoc = google.visualization.arrayToDataTable([
-                    ['Label', 'Value'],
-                    ['Batt (%)', soc] //hier kann {{ rd.nDbusSoc }} nicht verwendet werden
-                ]);
-                //data.setValue(0, 1, soc);//hier kann {{ rd.nDbusSoc }} nicht verwendet werden
-
-                var dataPvV = google.visualization.arrayToDataTable([
-                    ['Label', 'Value'],
-                    ['PV (V)', pvv]
-                ]);
-
-                var dataBaV = google.visualization.arrayToDataTable([
-                    ['Label', 'Value'],
-                    ['Batt (V)', bav]
-                ]);
-
-
-                var optionsSoc = {
-                    width: 400, height: 160,
-                    redFrom: 0, redTo: 15,
-                    yellowFrom: 15, yellowTo: 40,
-                    greenFrom: 40, greenTo: 100,
-                    minorTicks: 5
-                };
-                var optionsPvV = {
-                    width: 400, height: 160,
-                    greenFrom: 0, greenTo: 230,
-                    yellowFrom: 230, yellowTo: 240,
-                    redFrom: 240, redTo: 250,
-                    minorTicks: 5,
-                    min: 0,
-                    max: 250
-                };
-                var optionsBaV = {
-                    width: 400, height: 160,
-                    yellowFrom: 45, yellowTo: 48,
-                    greenFrom: 48, greenTo: 52,
-                    redFrom: 52, redTo: 55,
-                    minorTicks: 5,
-                    min: 45,
-                    max: 55
-                };
-
-                var chartSoc = new google.visualization.Gauge(document.getElementById('gaugeSoc'));
-                chartSoc.draw(dataSoc, optionsSoc);
-
-                var chartPvV = new google.visualization.Gauge(document.getElementById('gaugePvV'));
-                chartPvV.draw(dataPvV, optionsPvV);
-
-                var chartBaV = new google.visualization.Gauge(document.getElementById('gaugeBaV'));
-                chartBaV.draw(dataBaV, optionsBaV);
-
-                //catch-Test: alert(xxx)
-
-            }
-            catch (err) {
-                //alert(err);
-                document.getElementById('scripterr').innerHTML = err;
-            }
-      }
-
         /* When the user clicks on the button,
         toggle between hiding and showing the dropdown content */
         function myFunction() {
@@ -324,13 +255,15 @@
 
     </script>
 
+    <!-- Vega-Diagramm für den Ertrag -->
     <!-- https://developers.google.com/chart/interactive/docs/gallery/vegachart_examples?hl=de -->
     <script type="text/javascript">
         //google.charts.load('upcoming', { 'packages': ['vegachart'] }).then(drawChart);
         //google.charts.load('upcoming', { 'packages': ['vegachart'], 'language': 'de' }).then(drawChart);
         //google.charts.load('upcoming', { 'packages': ['vegachart'], 'language': 'ja' }).then(drawChart);
         //ok: google.charts.load('upcoming', { 'packages': ['vegachart'] }).then(drawChart);
-        ok: google.charts.load('current', { 'packages': ['vegachart'] }).then(drawChart);
+        //ok: 
+        google.charts.load('current', { 'packages': ['vegachart'] }).then(drawChart);
         //err: google.charts.load('current', { 'packages': ['vegachart'], 'language': 'de' }).then(drawChart);
         //err: google.charts.load('upcoming', { 'packages': ['vegachart'], 'language': 'de' }).then(drawChart);
         //err: google.charts.load('current', { 'packages': ['vegachart'], 'language': 'de-de' }).then(drawChart);
@@ -552,13 +485,14 @@
                 <table>
                     <tr>
                         <td valign="top">
-                            <div id="gaugeSoc" style="width: 160px; height: 160px;"></div>
+                            <canvas id="SOC" width="150" height="150"></canvas>
+
                         </td>
                         <td valign="top">
-                            <div id="gaugePvV" style="width: 160px; height: 160px;"></div>
+                            <canvas id="PVV" width="150" height="150"></canvas>
                         </td>
                         <td valign="top">
-                            <div id="gaugeBaV" style="width: 160px; height: 160px;"></div>
+                            <canvas id="BAV" width="150" height="150"></canvas>
                         </td>
                     </tr>
                 </table>
@@ -572,7 +506,7 @@
                     <div id="dbus">Akt. PV-Spannung:  rd.nDbusAktPvVolt V
                 -->
                 <div id="dbus">Max. PV-Spannung: {{rd.sDbusMaxPvVolt45 }} </div>
-                
+
                 <div id="dbus">Min. Zellenspannung: {{ rd.sDbusMinCellVolt }} V</div>
                 <div id="dbus">Max. Zellenspannung: {{ rd.sDbusMaxCellVolt }} V</div>
                 <div id="dbus">Min. Zellentemperatur: {{ rd.sDbusMinCellTemp }} °C</div>
@@ -652,12 +586,52 @@
     </table>
 
 
+    <script>
+        var GaugePara = {
+            elmtname: "SOC",
+            title: "Speicher (%)",
+            min: 0,
+            max: 100,
+            redFrom: 0, redTo: 15,
+            yellowFrom: 15, yellowTo: 40,
+            greenFrom: 40, greenTo: 100,
+            akt: {{ rd.nDbusSoc }}
+        };
 
+        try {
+            //grasmax_gauge.vDrawGauge();
+            vDrawGauge();
+        }
+        catch (err) {
+            document.getElementById('scripterr').innerHTML = 'Exception in vDrawGauge(): '.concat(err);
+        }
 
+        GaugePara = {
+            elmtname: "PVV",
+            title: "PV (V)",
+            min: 0,
+            max: 250,
+            greenFrom: 0, greenTo: 230,
+            yellowFrom: 230, yellowTo: 240,
+            redFrom: 240, redTo: 250,
+            akt: {{ rd.nDbusAktPvVolt }}
+        };
+        vDrawGauge();
 
-
+        GaugePara = {
+            elmtname: "BAV",
+            title: "Speicher (V)",
+            min: 45,
+            max: 55,
+            yellowFrom: 45, yellowTo: 48,
+            greenFrom: 48, greenTo: 52,
+            redFrom: 52, redTo: 55,
+            akt: {{ rd.nDbusBattVolt }}
+        };
+        vDrawGauge();
+    </script>
 
 
 </body>
-</html>
+</html >
 
